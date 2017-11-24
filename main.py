@@ -31,7 +31,7 @@ pygame.draw.rect(sub_leftbottom, Color(255, 255, 0), sub_leftbottom.get_rect(), 
 sub_leftbottom.blit(cb_text, (10,10))
 
 
-led_rect = Rect(50,50,50,50)
+led_rect = Rect(0,0,50,50)
 led_color = Color(100, 100, 100)
 led_text = font.render("灯", 1, Color(255, 0, 0))
 pygame.draw.ellipse(sub_right, led_color, led_rect)
@@ -59,5 +59,5 @@ while True:  # main game loop
             pygame.camera.quit()
             sys.exit()
     image = camera.get_image()
-    sub_lefttop.blit(image)
+    sub_lefttop.blit(image, (0, 0))
     pygame.display.update(rect_lefttop)
