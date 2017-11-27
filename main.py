@@ -1,7 +1,7 @@
-#coding:utf-8
 import pygame, sys, os
 import pygame.camera
 from pygame.locals import *
+import tkinter.filedialog
 
 pygame.init()
 # pygame.camera.init()
@@ -51,6 +51,7 @@ sub_right.blit(lock_text, (60,205))
 
 bg_color = Color(0, 0, 0)
 led_on = False
+response = ''
 pygame.display.update()
 while True:  # main game loop
     for event in pygame.event.get():
@@ -67,6 +68,12 @@ while True:  # main game loop
                 pygame.display.update(rect_right)
             elif event.key == ord('a'):
                 response = '添加照片'
+                # img = camera.get_image()
+                filename = tkinter.filedialog.asksaveasfilename(filetypes=[("jpg格式", ".jpg")])
+                if filename != '':
+                    if filename[-4:] != '.jpg':
+                        filename += '.jpg'
+                    pygame.image.save(img,filename.encode('gb2312'))
             elif event.key == ord('o'):
                 response = '人脸识别'
             elif event.key == ord('q'):
