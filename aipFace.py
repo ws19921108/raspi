@@ -20,25 +20,29 @@ def get_file_content(filePath):
 #
 # # 调用人脸属性检测接口
 # result = aipFace.detect(get_file_content('img\\jkr.jpg'), options=options)
-
+#
 # aipFace.addUser(
-#                 '中文',
-#                 '中文',
+#                 '1',
+#                 'jkr',
 #                 'group1',
 #                 get_file_content('img\\jkr.jpg')
 #                 )
 #
 # result = aipFace.getGroupUsers('group1')
-
+#
 # options = {
-#       'user_top_num': 2,
-#         'face_top_num': 2,
+#       'user_top_num': 1,
+#         'face_top_num': 1,
 #     }
 #
 # result= aipFace.identifyUser(
 #                   'group1',
-#                   get_file_content('img\\jkr.jpg'),
-#                   options
+#                   get_file_content('img\\jkr2.jpg')
 #                 )
+
+result = aipFace.getGroupUsers('group1')
 #
-# print(result)
+# for user in result['result']:
+#     aipFace.deleteGroupUser('group1', user['uid'])
+
+print(result)
