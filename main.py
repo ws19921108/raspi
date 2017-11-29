@@ -1,7 +1,7 @@
 import pygame, sys, os
 import pygame.camera
 from pygame.locals import *
-import tkinter.filedialog
+from aipFace import aipFace
 
 pygame.init()
 # pygame.camera.init()
@@ -52,37 +52,48 @@ sub_right.blit(lock_text, (60,205))
 bg_color = Color(0, 0, 0)
 led_on = False
 response = ''
+info = ''
+enterFlag = False
 pygame.display.update()
 while True:  # main game loop
     for event in pygame.event.get():
         if event.type == KEYDOWN:
-            if event.key == ord('l'):
-                led_on = not led_on
-                if led_on:
-                    led_color = Color(255, 255, 255)
-                    response = '开灯'
-                else:
-                    led_color = Color(100, 100, 100)
-                    response = '关灯'
-                pygame.draw.ellipse(sub_right, led_color, led_rect)
-                pygame.display.update(rect_right)
-            elif event.key == ord('a'):
-                response = '添加照片'
-                # img = camera.get_image()
-                filename = tkinter.filedialog.asksaveasfilename(filetypes=[("jpg格式", ".jpg")])
-                if filename != '':
-                    if filename[-4:] != '.jpg':
-                        filename += '.jpg'
-                    pygame.image.save(img,filename.encode('gb2312'))
-            elif event.key == ord('o'):
-                response = '人脸识别'
-            elif event.key == ord('q'):
-                # camera.stop()
-                pygame.quit()
-                sys.exit()
+            if enterFlag == True:
+                key = event.key
+                if (key >= 48 and key <=57) or (key >= 97 and key <= 122):
+                    info += chr(key)
+                    response = info
+                elif key == 13:
+                    enterFlag = False
+                    response = 'finish: info = ' + info
+                elif key == 8:
+                    if len(info) >= 1:
+                        info = info[:-1]
+                    response = info
+            else:
+                if event.key == ord('l'):
+                    led_on = not led_on
+                    if led_on:
+                        led_color = Color(255, 255, 255)
+                        response = '开灯'
+                    else:
+                        led_color = Color(100, 100, 100)
+                        response = '关灯'
+                    pygame.draw.ellipse(sub_right, led_color, led_rect)
+                    pygame.display.update(rect_right)
+                elif event.key == ord('a'):
+                    response = '添加照片'
+                    enterFlag = True
+                    info = ''
+                elif event.key == ord('o'):
+                    response = '人脸识别'
+                elif event.key == ord('q'):
+                    # camera.stop()
+                    pygame.quit()
+                    sys.exit()
             res_text = font.render(response, 1, Color(200, 200, 200))
             sub_leftbottom.fill(bg_color, Rect(10,60,620,50))
-            sub_leftbottom.blit(res_text, (300, 60))
+            sub_leftbottom.blit(res_text, (10, 60))
             pygame.display.update(rect_leftbottom)
         elif event.type == QUIT:
             # camera.stop()
