@@ -40,9 +40,9 @@ def get_file_content(filePath):
 #                   get_file_content('img\\jkr2.jpg')
 #                 )
 
-result = aipFace.getGroupUsers('group1')
+# result = aipFace.getGroupUsers('group1')
 #
 # for user in result['result']:
 #     aipFace.deleteGroupUser('group1', user['uid'])
 
-print(result)
+# print(result)

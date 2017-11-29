@@ -5,6 +5,8 @@ from aipFace import aipFace
 
 pygame.init()
 # pygame.camera.init()
+# cam_list = pygame.camera.list_cameras()
+# print(cam_list)
 # camera = pygame.camera.Camera('/dev/video0')
 # camera.start()
 
