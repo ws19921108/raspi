@@ -66,8 +66,11 @@ while True:  # main game loop
                     info += chr(key)
                     response = info
                 elif key == 13:
-                    enterFlag = False
-                    response = 'finish: info = ' + info
+                    if len(info) > 0:
+                        enterFlag = False
+                        response = 'finish: info = ' + info
+                    else:
+                        response = 'no input, retry!'
                 elif key == 8:
                     if len(info) >= 1:
                         info = info[:-1]
@@ -84,7 +87,7 @@ while True:  # main game loop
                     pygame.draw.ellipse(sub_right, led_color, led_rect)
                     pygame.display.update(rect_right)
                 elif event.key == ord('a'):
-                    response = '添加照片'
+                    response = '输入标识'
                     enterFlag = True
                     info = ''
                 elif event.key == ord('o'):
@@ -98,8 +101,8 @@ while True:  # main game loop
             sub_leftbottom.blit(res_text, (10, 60))
             pygame.display.update(rect_leftbottom)
         elif event.type == QUIT:
-            # camera.stop()
-            pygame.quit()
+            camera.stop()
+            # pygame.quit()
             sys.exit()
     # image = camera.get_image()
     # sub_lefttop.blit(image, (0, 0))
