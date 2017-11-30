@@ -15,11 +15,12 @@ win_height = 600
 img_width = 640
 img_height = 480
 border = 5
+font_size = 28
 
 screen = pygame.display.set_mode((win_width, win_height))
 pygame.display.set_caption('BBbird中文版')
 
-font = pygame.font.Font("simhei.ttf", 32)
+font = pygame.font.Font("simhei.ttf", font_size)
 
 sub_lefttop = screen.subsurface((0,0,img_width,img_height))
 sub_leftbottom  = screen.subsurface((0,img_height,img_width,win_height-img_height))
@@ -34,7 +35,7 @@ img = pygame.transform.scale(img, (img_width, img_height))
 pygame.draw.rect(sub_lefttop, Color(255, 0, 255), sub_lefttop.get_rect(), border)
 sub_lefttop.blit(img, (0, 0))
 
-cb_text = font.render('a--添加\to--验证\tl--LED开关\tq--退出', 1, Color(200, 200, 200))
+cb_text = font.render('a--添加\to--验证\tl--LED\tv--语音\tq--退出', 1, Color(200, 200, 200))
 pygame.draw.rect(sub_leftbottom, Color(255, 255, 0), sub_leftbottom.get_rect(), border)
 sub_leftbottom.blit(cb_text, (10,10))
 
@@ -92,6 +93,8 @@ while True:  # main game loop
                     info = ''
                 elif event.key == ord('o'):
                     response = '人脸识别'
+                elif event.key == ord('v'):
+                    response = '语音输入'
                 elif event.key == ord('q'):
                     # camera.stop()
                     pygame.quit()
@@ -101,7 +104,7 @@ while True:  # main game loop
             sub_leftbottom.blit(res_text, (10, 60))
             pygame.display.update(rect_leftbottom)
         elif event.type == QUIT:
-            camera.stop()
+            # camera.stop()
             # pygame.quit()
             sys.exit()
     # image = camera.get_image()
