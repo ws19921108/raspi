@@ -20,27 +20,35 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
 TIME = 5
+
 # define callback (2)
-def callback(in_data, frame_count, time_info, status):
-    frames.append(in_data)
-    return (in_data, pyaudio.paContinue)
+# def callback(in_data, frame_count, time_info, status):
+#     data = stream.read(CHUNK)
+#     frames.append(in_data)
+#     return (in_data, pyaudio.paContinue)
 
-
-frames = []
 # open stream using callback (3)
 stream = p.open(format=FORMAT,
                 channels=CHANNELS,
                 rate=RATE,
                 input=True,
-                stream_callback=callback)
+                frames_per_buffer=CHUNK)
+                # stream_callback=callback)
 
 # start the stream (4)
 stream.start_stream()
 
-# wait for stream to finish (5)
-while TIME:
-    sleep(1)
-    TIME -= 1
+frames = []
+print(int(RATE / CHUNK * TIME))
+for i in range(0, int(RATE / CHUNK * TIME)):
+    print('.')
+    data = stream.read(CHUNK)
+    frames.append(data)
+
+# # wait for stream to finish (5)
+# while TIME:
+#     sleep(1)
+#     TIME -= 1
 
 # stop stream (6)
 stream.stop_stream()
