@@ -35,9 +35,9 @@ img = pygame.transform.scale(img, (img_width, img_height))
 pygame.draw.rect(sub_lefttop, Color(255, 0, 255), sub_lefttop.get_rect(), border)
 sub_lefttop.blit(img, (0, 0))
 
-cb_text = font.render('a--添加\to--验证\tl--LED\tv--语音\tq--退出', 1, Color(200, 200, 200))
+# cb_text = font.render('a--添加\to--验证\tl--LED\tv--语音\tq--退出', 1, Color(200, 200, 200))
 pygame.draw.rect(sub_leftbottom, Color(255, 255, 0), sub_leftbottom.get_rect(), border)
-sub_leftbottom.blit(cb_text, (10,10))
+# sub_leftbottom.blit(cb_text, (10,10))
 
 
 led_rect = Rect(55,20,50,50)
@@ -45,7 +45,7 @@ led_color = Color(100, 100, 100)
 lock_rect = Rect(55,150,50,50)
 lock_color = Color(100, 100, 100)
 led_text = font.render("灯", 1, Color(255, 0, 0))
-lock_text = font.render("锁", 1, Color(255, 0, 0))
+lock_text = font.render("门", 1, Color(255, 0, 0))
 pygame.draw.ellipse(sub_right, led_color, led_rect)
 pygame.draw.ellipse(sub_right, lock_color, lock_rect)
 pygame.draw.rect(sub_right, Color(0, 255, 255), sub_right.get_rect(), border)
@@ -58,6 +58,9 @@ response = ''
 info = ''
 enterFlag = False
 pygame.display.update()
+
+
+
 while True:  # main game loop
     for event in pygame.event.get():
         if event.type == KEYDOWN:
