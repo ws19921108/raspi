@@ -14,7 +14,7 @@ def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
 
-# result = aipSpeech.asr(get_file_content('audio.mp3'), 'pcm', 16000, {
+# result = aipSpeech.asr(get_file_content('audio.wav'), 'pcm', 16000, {
 #     'lan': 'zh',
 # })
 # print(result)

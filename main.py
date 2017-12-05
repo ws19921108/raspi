@@ -50,13 +50,10 @@ img = pygame.transform.scale(img, (img_width, img_height))
 pygame.draw.rect(sub_lefttop, Color(255, 0, 255), sub_lefttop.get_rect(), border)
 sub_lefttop.blit(img, (0, 0))
 
-<<<<<<< HEAD
-# cb_text = font.render('a--添加\to--验证\tl--LED\tv--语音\tq--退出', 1, Color(200, 200, 200))
-=======
+
 cb_text = font.render('你：', 1, Color(200, 200, 200))
->>>>>>> fb8034cf5e8adc248087c640b44775e2921c6912
 pygame.draw.rect(sub_leftbottom, Color(255, 255, 0), sub_leftbottom.get_rect(), border)
-# sub_leftbottom.blit(cb_text, (10,10))
+sub_leftbottom.blit(cb_text, (10,10))
 
 
 led_rect = Rect(55,20,50,50)
@@ -78,12 +75,6 @@ response = ''
 info = ''
 enterFlag = False
 pygame.display.update()
-<<<<<<< HEAD
-
-
-
-while True:  # main game loop
-=======
 image = camera.get_image()
 
 def video():
@@ -97,10 +88,60 @@ video_thd = threading.Thread(target=video)
 video_thd.setDaemon(True)
 video_thd.start()
 
+def printLine(m, text):
+    line_list = [(10, 10), (10, 60)]
+    sub_leftbottom.fill(bg_color, Rect(line_list[m][0], line_list[m][1], 620, 80))
+    line = font.render(text, 1, Color(200, 200, 200))
+    sub_leftbottom.blit(line, line_list[m])
+    pygame.display.update(rect_leftbottom)
 
+def setLED(led_on):
+    color = Color(255, 255, 255) if led_on else Color(100, 100, 100)
+    pygame.draw.ellipse(sub_right, color, led_rect)
+    pygame.display.update(rect_right)
+
+def unLock(lock_on):
+    color = Color(255, 255, 255) if lock_on else Color(100, 100, 100)
+    pygame.draw.ellipse(sub_right, color, lock_rect)
+    pygame.display.update(rect_right)
+
+def recording(flag):
+    color = Color(200, 0, 0) if flag else Color(0, 0, 0)
+    pygame.draw.ellipse(sub_leftbottom, color, Rect(600,10,30,30))
+    pygame.display.update(rect_leftbottom)
+
+def text2voice(text):
+    result = aipSpeech.synthesis(text, 'zh', 1, {
+            'vol': 5,
+    })
+    if not isinstance(result, dict):
+        with open('audio.mp3', 'wb') as f:
+            f.write(result)
+    time.sleep(0.2)
+    playMp3('audio.mp3')
+
+def openTheDoor():
+    pygame.image.save(image, 'tmp.jpg')
+    result = aipFace.identifyUser(group, get_file_content('tmp.jpg'))
+    if 'result' in result:
+        item = result['result'][0]
+
+        info = item['user_info']
+        score = item['scores'][0]
+        if score >= 75:
+            unLock(True)
+            res = '欢迎，' + info
+        else:
+            res = '你好，陌生人'
+    else:
+        res = '未获取到有效头像'
+    printLine(1, res)
+    text2voice(res)
+
+
+words = {'开灯': setLED(True), '关灯': setLED(False), '开门': openTheDoor(), '关门': unLock(False)}
 
 while True:
->>>>>>> fb8034cf5e8adc248087c640b44775e2921c6912
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if enterFlag == True:
@@ -123,74 +164,42 @@ while True:
             else:
                 if event.key == ord('l'):
                     led_on = not led_on
-                    if led_on:
-                        led_color = Color(255, 255, 255)
-                        response = '开灯'
-                    else:
-                        led_color = Color(100, 100, 100)
-                        response = '关灯'
-                    pygame.draw.ellipse(sub_right, led_color, led_rect)
-                    pygame.display.update(rect_right)
+                    setLED(led_on)
+                    tips = '开灯' if led_on else '关灯'
+                    printLine(0,tips)
                 elif event.key == ord('a'):
-                    response = '输入标识'
-                    pygame.image.save(image, 'tmp.jpg') 
+                    printLine(1, '输入')
+                    pygame.image.save(image, 'tmp.jpg')
                     enterFlag = True
                     info = ''
                 elif event.key == ord('o'):
                     response = '人脸识别'
-                    pygame.image.save(image, 'tmp.jpg')
-                    result = aipFace.identifyUser(group, get_file_content('tmp.jpg'))
-                    if 'result' in result:
-                        item = result['result'][0]
-                    
-                        info = item['user_info']
-                        score = item['scores'][0]
-                        response = info + str(score)
-                        if score >= 75:
-                            pass
-                    else:
-                        response = 'not found face'
+
                 elif event.key == ord('v'):
-                    response = '语音输入'
-                    ask = '你：'
+                    recording(True)
                     startRecord()
                 elif event.key == ord('q'):
                     camera.stop()
                     pygame.quit()
                     sys.exit()
-            res_text = font.render(response, 1, Color(200, 200, 200))
-            sub_leftbottom.fill(bg_color, Rect(10,60,620,50))
-            sub_leftbottom.blit(res_text, (10, 60))
-            pygame.display.update(rect_leftbottom)
         elif event.type == KEYUP:
             if event.key == ord('v'):
-                response = ''
+                recording(False)
+                ans = ''
                 stopRecord()
                 sleep(0.5)
                 result = aipSpeech.asr(get_file_content('test.wav'), 'pcm', 16000, {'lan': 'zh',})
                 if 'result' in result:
-                    speech = result['result'][0]
-                    ask += speech
-                    ans = tuling(speech)
-                    response += ans
-                    result  = aipSpeech.synthesis(ans, 'zh', 1, {
-                        'vol': 5,
-                    })
-                    print(ans)
-                    # 识别正确返回语音二进制 错误则返回dict 参照下面错误码
-                    if not isinstance(result, dict):
-                        with open('audio.mp3', 'wb') as f:
-                            f.write(result)
-                    time.sleep(0.1)
-                    playMp3('audio.mp3')
+                    speech = result['result'][0].strip(',')
+                    printLine(0, speech)
+                    if speech in words:
+                        words[speech]
+                    else:
+                        ans = tuling(speech)
                 else:
-                    response += 'not found voice'
-            res_text = font.render(response, 1, Color(200, 200, 200))     
-            cb_text = font.render(ask, 1, Color(200, 200, 200))
-            sub_leftbottom.fill(bg_color, Rect(10,10,620,100))
-            sub_leftbottom.blit(res_text, (10, 60))
-            sub_leftbottom.blit(cb_text, (10,10))
-            pygame.display.update(rect_leftbottom)
+                    ans += '声音不清晰'
+                printLine(1, ans)
+                text2voice(ans)
         elif event.type == QUIT:
             camera.stop()
             pygame.quit()
