@@ -14,4 +14,4 @@ def tuling(text):
     res = json.loads(r.text)['text']
     return res
 
-print(tuling('说什么'))
+#print(tuling('说什么'))
