@@ -6,6 +6,18 @@ from aipFace import aipFace, get_file_content, aipSpeech
 from time import sleep
 from audio import playMp3, startRecord, stopRecord
 from tuling import tuling
+from flask import Flask, render_template, Response
+
+app = Flask(__name__)
+
+
+
+
+
+
+
+
+
 
 
 pygame.init()
@@ -88,6 +100,13 @@ video_thd = threading.Thread(target=video)
 video_thd.setDaemon(True)
 video_thd.start()
 
+
+
+
+
+
+
+
 def printLine(m, text):
     line_list = [(10, 10), (10, 60)]
     sub_leftbottom.fill(bg_color, Rect(line_list[m][0], line_list[m][1], 620, 80))
@@ -140,6 +159,27 @@ def openTheDoor():
 
 
 words = {'开灯': setLED(True), '关灯': setLED(False), '开门': openTheDoor(), '关门': unLock(False)}
+
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+def gen():
+    while True:
+        pygame.image.save(image, 'tmp.jpg')
+        frame = get_file_content('tmp.jpg')
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
 
 while True:
     for event in pygame.event.get():
